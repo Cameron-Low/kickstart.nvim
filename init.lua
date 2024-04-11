@@ -1,65 +1,28 @@
--- [[ Leader setup ]]
--- Set <space> as the leader key
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+-- [[ Global setup ]]
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
--- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
-
--- Make relative line numbers default
 vim.opt.number = true
 vim.opt.relativenumber = true
-
--- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
-
--- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
-
--- Sync clipboard between OS and Neovim.
 vim.opt.clipboard = 'unnamedplus'
-
--- Enable break indent
 vim.opt.breakindent = true
-
--- Save undo history
 vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-
--- Keep signcolumn on by default
 vim.opt.signcolumn = 'yes'
-
--- Decrease update time
 vim.opt.updatetime = 250
-
--- Decrease mapped sequence wait time
--- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
-
--- Configure how new splits should be opened
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-
--- Sets how neovim will display certain whitespace characters in the editor.
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
--- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
-
--- Show which line your cursor is on
 vim.opt.cursorline = true
-
--- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
-
--- Customize netrw
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
@@ -149,15 +112,9 @@ require('lazy').setup({
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      { -- If encountering errors, see telescope-fzf-native README for installation instructions
+      {
         'nvim-telescope/telescope-fzf-native.nvim',
-
-        -- `build` is used to run some command when the plugin is installed/updated.
-        -- This is only run then, not every time Neovim starts up.
         build = 'make',
-
-        -- `cond` is a condition used to determine whether this plugin should be
-        -- installed and loaded.
         cond = function()
           return vim.fn.executable 'make' == 1
         end,
@@ -174,15 +131,6 @@ require('lazy').setup({
 
       -- [[ Configure Telescope ]]
       require('telescope').setup {
-        -- You can put your default mappings / updates / etc. in here
-        --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -313,10 +261,6 @@ require('lazy').setup({
         end,
       })
 
-      -- LSP servers and clients are able to communicate to each other what features they support.
-      --  By default, Neovim doesn't support everything that is in the LSP specification.
-      --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-      --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
@@ -332,7 +276,6 @@ require('lazy').setup({
             },
           },
         },
-
         lua_ls = {
           settings = {
             Lua = {
@@ -368,9 +311,6 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
         return {
           timeout_ms = 500,
@@ -515,7 +455,7 @@ require('lazy').setup({
   },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
